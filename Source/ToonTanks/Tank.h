@@ -21,6 +21,10 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+protected:
+	// Called when the game starts or when spawned
+	virtual void BeginPlay() override;
+
 private:
 	//To attach the Camera for a more dynamic camera movement
 	UPROPERTY(VisibleAnywhere, Category = "Components")
@@ -30,7 +34,13 @@ private:
 		class UCameraComponent* Camera;
 	//Speed Modifier
 	UPROPERTY(EditAnywhere, Category = "Movements")
-		float Speed = 250.0;
+		float MoveSpeed = 250.0;
+
+	UPROPERTY(EditAnywhere, Category = "Movements")
+		float RotateSpeed = 100.0;
 
 	void Move(float Value);
+	void Turn(float Value);
+
+	APlayerController* PlayerControllerRef;
 };

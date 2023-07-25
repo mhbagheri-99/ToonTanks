@@ -14,11 +14,8 @@ class TOONTANKS_API ABasePawn : public APawn
 public:
 	// Sets default values for this pawn's properties
 	ABasePawn();
-	//
-protected:
-	// Called when the game starts or when spawned
-	virtual void BeginPlay() override;
 
+protected:
 	//Made protected Cause it was needed in the Tank(child) to help with the camera system
 	UPROPERTY(VisibleAnywhere, Category = "Components", meta = (AllowPrivateAccess = "true"), BlueprintReadOnly)
 		UStaticMeshComponent* BaseMesh;

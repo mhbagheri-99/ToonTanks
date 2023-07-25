@@ -16,13 +16,25 @@ ATank::ATank()
 	Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
 	Camera->SetupAttachment(SpringArm);
 }
+
 //Needed to Bind the Axis for Player Movement Control
 void ATank::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 	//Binding the MoveForward Axis to our Player Input Component
 	PlayerInputComponent->BindAxis(TEXT("MoveForward"), this, &ATank::Move);
+
+	PlayerInputComponent->BindAxis(TEXT("Turn"), this, &ATank::Turn);
 }
+
+// Called when the game starts or when spawned
+void ATank::BeginPlay()
+{
+	Super::BeginPlay();
+
+	PlayerControllerRef = Cast<APlayerController>(GetController());
+}
+
 //Function that Handles the Tank's Movement
 void ATank::Move(float Value) 
 {
@@ -33,7 +45,15 @@ void ATank::Move(float Value)
 	//Using Delta Seconds to Make the Movement Smoother (Handles the FPS Change Problem)
 	float DeltaSeconds = UGameplayStatics::GetWorldDeltaSeconds(this);
 	//Value(W) = 1 & Value(S) = -1
-	DeltaLocation.X = Value * Speed * DeltaSeconds;
+	DeltaLocation.X = Value * MoveSpeed * DeltaSeconds;
 
-	AddActorLocalOffset(DeltaLocation);
+	AddActorLocalOffset(DeltaLocation, true);
+}
+
+void ATank::Turn(float Value)
+{
+	FRotator DeltaRotation = FRotator::ZeroRotator;
+	float DeltaSeconds = UGameplayStatics::GetWorldDeltaSeconds(this);
+	DeltaRotation.Yaw = Value * RotateSpeed * DeltaSeconds;
+	AddActorLocalRotation(DeltaRotation);
 }
