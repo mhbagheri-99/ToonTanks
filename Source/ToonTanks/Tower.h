@@ -18,6 +18,8 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+	void HandleDestruction();
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -25,6 +27,12 @@ protected:
 private:
 	UPROPERTY(EditDefaultsOnly, Category = "Fire Settings")
 		float FireRange = 800.0;
+
+	FTimerHandle FireRateTimerHandle;
+	float FireRate = 2.f;
+	void CheckFireCondition();
+
+	bool InFireRange();
 
 public:
 	class ATank* Tank;

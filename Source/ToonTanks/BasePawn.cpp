@@ -4,6 +4,10 @@
 #include "BasePawn.h"
 #include "Components/CapsuleComponent.h"
 #include "Kismet/GameplayStatics.h"
+//#include "DrawDebugHelpers.h"
+#include "Projectile.h"
+#include "Camera/CameraShakeBase.h"
+
 
 // Sets default values
 ABasePawn::ABasePawn()
@@ -37,3 +41,42 @@ void ABasePawn::RotateTurret(FVector LookAtTarget)
 	);
 }
 
+void ABasePawn::Fire()
+{
+	/*
+	DrawDebugSphere
+	(
+		GetWorld(),
+		ProjectileSpawnPoint->GetComponentLocation(),
+		10.f,
+		12.f,
+		FColor::Red,
+		false,
+		3.f
+	);
+	*/
+
+	AProjectile* Projectile = GetWorld()->SpawnActor<AProjectile>(
+		ProjectileClass,
+		ProjectileSpawnPoint->GetComponentLocation(),
+		ProjectileSpawnPoint->GetComponentRotation()
+	);
+
+	Projectile->SetOwner(this);
+}
+
+void ABasePawn::HandleDestruction()
+{
+	if (ExplosionParticle)
+	{
+		UGameplayStatics::SpawnEmitterAtLocation(this, ExplosionParticle, GetActorLocation(), GetActorRotation());
+	}
+	if (ExplosionSound)
+	{
+		UGameplayStatics::PlaySoundAtLocation(this, ExplosionSound, GetActorLocation());
+	}
+	if (ExplosionCameraShakeClass)
+	{
+		GetWorld()->GetFirstPlayerController()->ClientStartCameraShake(ExplosionCameraShakeClass);
+	}
+}
