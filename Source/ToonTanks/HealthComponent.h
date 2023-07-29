@@ -21,12 +21,12 @@ protected:
 	virtual void BeginPlay() override;
 
 private:
-
+	// Max Health - useful for not only tracking the health but also healing and power up implementation
 	UPROPERTY(EditAnywhere)
 		float MaxHealth = 100.f;
-
+	// Current Health
 	float Health = 0.f;
-
+	
 	UFUNCTION()
 		void DamageTaken(AActor* DamagedActor, float Damage, const UDamageType* DamageType, AController* Instigator, AActor* DamageCauser);
 

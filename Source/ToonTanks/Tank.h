@@ -24,7 +24,7 @@ public:
 	void HandleDestruction();
 
 	APlayerController* GetTankPlayerController() const;
-
+	// Is the tank alive
 	bool bAlive = true;
 
 protected:
@@ -35,13 +35,12 @@ private:
 	//To attach the Camera for a more dynamic camera movement
 	UPROPERTY(VisibleAnywhere, Category = "Components")
 		class USpringArmComponent* SpringArm;
-
 	UPROPERTY(VisibleAnywhere, Category = "Components")
 		class UCameraComponent* Camera;
-	//Speed Modifier
+
+	//Speed Modifiers
 	UPROPERTY(EditAnywhere, Category = "Movements")
 		float MoveSpeed = 250.0;
-
 	UPROPERTY(EditAnywhere, Category = "Movements")
 		float RotateSpeed = 100.0;
 

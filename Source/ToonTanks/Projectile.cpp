@@ -14,6 +14,7 @@ AProjectile::AProjectile()
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = false;
 
+	//Setting Up and Attaching the Necessary Meshes and Components
 	ProjectileMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Projectile Mesh"));
 	RootComponent = ProjectileMesh;
 
@@ -21,6 +22,7 @@ AProjectile::AProjectile()
 	ProjectileMovementComponent->InitialSpeed = 1000.f;
 	ProjectileMovementComponent->MaxSpeed = 1500.f;
 
+	//Sets a smoke trail VFX
 	TrailParticleComponent = CreateDefaultSubobject<UParticleSystemComponent>(TEXT("Trail Particle Component"));
 	TrailParticleComponent->SetupAttachment(RootComponent);
 }
@@ -29,9 +31,9 @@ AProjectile::AProjectile()
 void AProjectile::BeginPlay()
 {
 	Super::BeginPlay();
-	
+	// Binding our OnHit function to OnComponentHit of OnComponentHit (it will be called upon that)
 	ProjectileMesh->OnComponentHit.AddDynamic(this, &AProjectile::OnHit);
-
+	// Launch SFX
 	if (LaunchSound)
 		UGameplayStatics::PlaySoundAtLocation(this, LaunchSound, GetActorLocation());
 
@@ -44,6 +46,7 @@ void AProjectile::Tick(float DeltaTime)
 
 }
 
+//Function to handle all necessary things after the projectile hits the target
 void AProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
 {
 	AActor* ProjectileOwner = GetOwner();
@@ -60,22 +63,28 @@ void AProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimi
 
 	if (OtherActor && OtherActor != this && OtherActor != ProjectileOwner)
 	{
+		// Calls the DamageTaken function
 		UGameplayStatics::ApplyDamage(OtherActor, Damage, ProjectileOwnerInstigator, this, DamageTypeClass);
-		UE_LOG(LogTemp, Warning, TEXT("%f damage taken."), Damage);
+		
+		//UE_LOG(LogTemp, Warning, TEXT("%f damage taken."), Damage);
 
+		//Small Explosion VFX
 		if (HitParticle)
 		{
 			UGameplayStatics::SpawnEmitterAtLocation(this, HitParticle, GetActorLocation(), GetActorRotation());
 		}
+		//Small Explosion SFX
 		if (HitSound)
 		{
 			UGameplayStatics::PlaySoundAtLocation(this, HitSound, GetActorLocation());
 		}
+		//Explosion Camera Shake (Less intense compared to tanks and towers explosion shake)
 		if (HitCameraShakeClass)
 		{
 			GetWorld()->GetFirstPlayerController()->ClientStartCameraShake(HitCameraShakeClass);
 		}
 	}
+	// Destroys the projectile
 	Destroy();
 }
 

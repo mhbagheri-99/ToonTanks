@@ -23,9 +23,11 @@ void ATank::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 	//Binding the MoveForward Axis to our Player Input Component
 	PlayerInputComponent->BindAxis(TEXT("MoveForward"), this, &ATank::Move);
-
+	//Binding the Turn Axis to our Player Input Component
 	PlayerInputComponent->BindAxis(TEXT("Turn"), this, &ATank::Turn);
-
+	//Binding the Fire Action to our Player Input Component
+	//It happens as soon as it is pressed
+	//Should be modified for guns with a higher rate of fire (rapid firing while it is pressed)
 	PlayerInputComponent->BindAction(TEXT("Fire"), IE_Pressed, this, &ATank::Fire);
 }
 
@@ -45,7 +47,7 @@ void ATank::Tick(float DeltaTime)
 	if (TankPlayerController)
 	{
 		FHitResult HitResult;
-
+		// Gets the location of the mouse cursor (aim)
 		TankPlayerController->GetHitResultUnderCursor(
 			ECollisionChannel::ECC_Visibility,
 			false,
@@ -72,6 +74,8 @@ void ATank::Move(float Value)
 	AddActorLocalOffset(DeltaLocation, true);
 }
 
+//Function that Handles the Tank's Turret's Rotation
+//Similar to above
 void ATank::Turn(float Value)
 {
 	FRotator DeltaRotation = FRotator::ZeroRotator;
@@ -83,11 +87,11 @@ void ATank::Turn(float Value)
 void ATank::HandleDestruction()
 {
 	Super::HandleDestruction();
-
+	// Hides the tank (the player's pawn)
 	SetActorHiddenInGame(true);
-
+	// Disables the tick function to improve performance
 	SetActorTickEnabled(false);
-
+	// Declares the tank is dead
 	bAlive = false;
 }
 

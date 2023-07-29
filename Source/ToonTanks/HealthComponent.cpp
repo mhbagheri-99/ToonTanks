@@ -20,9 +20,9 @@ UHealthComponent::UHealthComponent()
 void UHealthComponent::BeginPlay()
 {
 	Super::BeginPlay();
-
+	// Pawns spawn with max health
 	Health = MaxHealth;
-	
+	// Binding our DamageTaken function to OnTakeAnyDamage (it will be called upon that)
 	GetOwner()->OnTakeAnyDamage.AddDynamic(this, &UHealthComponent::DamageTaken);
 
 	ToonTanksGameMode = Cast<AToonTanksGameMode>(UGameplayStatics::GetGameMode(this));
@@ -43,11 +43,12 @@ void UHealthComponent::DamageTaken(AActor* DamagedActor, float Damage, const UDa
 	{
 		return;
 	}
-
+	// Damages the DamagedActor
 	Health -= Damage;
 
 	if (Health <= 0)
 	{
+		// Calls the ActorDied if health is no longer positive
 		ToonTanksGameMode->ActorDied(DamagedActor);
 	}
 	

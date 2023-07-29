@@ -11,7 +11,7 @@ void ATower::BeginPlay()
 	Super::BeginPlay();
 
 	Tank = Cast<ATank>(UGameplayStatics::GetPlayerPawn(this, 0));
-
+	// Sets the timer (to handle towers fire rate)
 	GetWorldTimerManager().SetTimer(FireRateTimerHandle, this, &ATower::CheckFireCondition, FireRate, true);
 }
 
@@ -21,11 +21,13 @@ void ATower::Tick(float DeltaTime)
 
 	if (InFireRange()) 
 	{
+		// Starts aiming at the Tank if it is in range
 		RotateTurret(Tank->GetActorLocation());
 	}
 		
 }
 
+// Checks if the Tank is in Range of Fire
 bool ATower::InFireRange()
 {
 	if (Tank)
@@ -42,6 +44,7 @@ bool ATower::InFireRange()
 
 void ATower::CheckFireCondition()
 {
+	// if the Tank is Alive and in Fire Range it Fires
 	if (Tank && Tank->bAlive && InFireRange()) 
 	{
 		Fire();

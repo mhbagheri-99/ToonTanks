@@ -25,6 +25,7 @@ protected:
 	virtual void BeginPlay() override;
 	
 private:
+	// Fire range of Towers
 	UPROPERTY(EditDefaultsOnly, Category = "Fire Settings")
 		float FireRange = 800.0;
 

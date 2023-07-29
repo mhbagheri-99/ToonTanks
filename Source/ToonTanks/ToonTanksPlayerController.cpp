@@ -3,6 +3,7 @@
 
 #include "ToonTanksPlayerController.h"
 
+// (De)Activates the player input for the pawn
 void AToonTanksPlayerController::SetPlayerEnabledState(bool bPlayerEnabled)
 {
 	if (bPlayerEnabled)
